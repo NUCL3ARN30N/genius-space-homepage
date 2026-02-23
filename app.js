@@ -312,6 +312,80 @@ function updateFooterYear() {
   yearEl.innerHTML = `&copy; ${currentYear} NUCL3ARN30N &amp; friends`;
 }
 
+// ===== PWA Install =====
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+console.log('[PWA] Install button element:', installBtn);
+console.log('[PWA] Waiting for beforeinstallprompt event...');
+
+// Check if already installed
+if (window.matchMedia('(display-mode: standalone)').matches) {
+  console.log('[PWA] App is already installed');
+} else {
+  console.log('[PWA] App is not installed yet');
+}
+
+// Listen for beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('[PWA] beforeinstallprompt event fired!');
+  // Prevent the mini-infobar from appearing
+  e.preventDefault();
+  // Store the event for later use
+  deferredPrompt = e;
+  // Show the install button
+  if (installBtn) {
+    installBtn.style.display = 'flex';
+    console.log('[PWA] Install button shown');
+  } else {
+    console.error('[PWA] Install button element not found!');
+  }
+});
+
+// Handle install button click
+if (installBtn) {
+  installBtn.addEventListener('click', async () => {
+    console.log('[PWA] Install button clicked');
+    if (!deferredPrompt) {
+      console.log('[PWA] No deferred prompt available');
+      return;
+    }
+
+    // Show the install prompt
+    deferredPrompt.prompt();
+
+    // Wait for the user's response
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`[PWA] User ${outcome === 'accepted' ? 'accepted' : 'dismissed'} the install prompt`);
+
+    // Clear the deferredPrompt
+    deferredPrompt = null;
+    installBtn.style.display = 'none';
+  });
+}
+
+// Hide install button if already installed
+window.addEventListener('appinstalled', () => {
+  console.log('[PWA] App was installed');
+  if (installBtn) {
+    installBtn.style.display = 'none';
+  }
+  deferredPrompt = null;
+});
+
+// ===== Service Worker Registration =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('Service Worker registered:', registration.scope);
+      })
+      .catch((error) => {
+        console.log('Service Worker registration failed:', error);
+      });
+  });
+}
+
 // ===== Init =====
 updateFooterYear();
 fetchRepos();

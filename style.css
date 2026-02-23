@@ -212,9 +212,22 @@ header {
   color: var(--t2); text-decoration: none;
   font-size: 13px; font-weight: 500;
   transition: all var(--tr);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
 }
 .hlink:hover { background: var(--hov); border-color: var(--t3); color: var(--t1); }
 .hlink i { font-size: 14px; }
+.hlink.install-btn {
+  background: linear-gradient(135deg, var(--ac), #8b7cf7);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(108, 92, 231, .25);
+}
+.hlink.install-btn:hover {
+  box-shadow: 0 4px 20px rgba(108, 92, 231, .4);
+  transform: translateY(-1px);
+  color: #fff;
+}
 
 /* ===== Hero ===== */
 .hero {
