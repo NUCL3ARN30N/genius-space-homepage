@@ -1,7 +1,7 @@
 // ===== Genius Space — App Logic =====
+// Configuration is loaded from config.js
 
-const GITHUB_USER = 'NUCL3ARN30N';
-const API_URL = `https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100`;
+const API_URL = `https://api.github.com/users/${GITHUB_USER}/repos?sort=${DISPLAY_SETTINGS.sortBy}&per_page=${DISPLAY_SETTINGS.perPage}`;
 
 let allRepos = [];
 let activeLang = 'all';
@@ -135,8 +135,16 @@ async function fetchRepos() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     allRepos = await res.json();
 
-    // Filter out forks optionally — keep all for now
-    allRepos = allRepos.filter(r => !r.fork);
+    // Filter out forks if configured
+    if (!DISPLAY_SETTINGS.showForks) {
+      allRepos = allRepos.filter(r => !r.fork);
+    }
+
+    // Filter by allowed repos if specified
+    if (ALLOWED_REPOS.length > 0) {
+      const allowedList = ALLOWED_REPOS.map(name => name.trim().toLowerCase());
+      allRepos = allRepos.filter(r => allowedList.includes(r.name.toLowerCase()));
+    }
 
     updateStats();
     buildLangFilters();
