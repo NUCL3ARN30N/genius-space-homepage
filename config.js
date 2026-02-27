@@ -10,6 +10,7 @@ const ALLOWED_REPOS = [
 'qr-genius',
 'image-converter',
 'PingPortTester',
+'insta-dl',
 ];
 
 // Display Settings
