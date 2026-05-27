@@ -11,6 +11,7 @@ const ALLOWED_REPOS = [
 'image-converter',
 'PingPortTester',
 'insta-dl',
+'pdf-genius',
 ];
 
 // Display Settings
