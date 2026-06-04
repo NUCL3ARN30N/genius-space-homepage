@@ -12,6 +12,7 @@ const ALLOWED_REPOS = [
 'PingPortTester',
 'insta-dl',
 'pdf-genius',
+'sitecheck',
 ];
 
 // Display Settings
